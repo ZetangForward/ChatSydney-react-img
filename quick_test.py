@@ -27,7 +27,7 @@ def image_to_base64(image_path):
     return base64.b64encode(img_data).decode('utf-8')  
   
 # 示例  
-image_path = "/workspace/zecheng/ChatSydney-react-img/public/upload_image.png"  
+image_path = "/workspace/zecheng/ChatSydney-react-img/public/svgviewer-png-output.png"  
 imageInput = image_to_base64(image_path)  
 
 locale = 'zh-CN'

@@ -36,7 +36,7 @@ async def sydney_process_message(user_message, bot_mode, context, _U, KievRPSSec
             }
             cookies = list(filter(lambda d: d.get('name') != 'SRCHHPGUSR', cookies)) + [{"name": "SRCHHPGUSR","value": SRCHHPGUSR[bot_mode]}]
             chatbot = await Chatbot.create(cookies=cookies, proxy=args.proxy, imageInput=imageInput)
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
             async for _, response in chatbot.ask_stream(prompt=user_message, conversation_style=bot_mode, raw=True,
                                                         webpage_context=context, search_result=True, locale=locale):
                 yield response
