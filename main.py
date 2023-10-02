@@ -20,7 +20,6 @@ async def sydney_process_message(user_message, bot_mode, context, _U, KievRPSSec
     max_retries = 5
     for i in range(max_retries + 1):
         try:
-            import pdb; pdb.set_trace()
             cookies = loaded_cookies
             if _U:
                 cookies = list(filter(lambda d: d.get('name') != '_U', cookies)) + [{"name": "_U", "value": _U}]
@@ -37,6 +36,7 @@ async def sydney_process_message(user_message, bot_mode, context, _U, KievRPSSec
             }
             cookies = list(filter(lambda d: d.get('name') != 'SRCHHPGUSR', cookies)) + [{"name": "SRCHHPGUSR","value": SRCHHPGUSR[bot_mode]}]
             chatbot = await Chatbot.create(cookies=cookies, proxy=args.proxy, imageInput=imageInput)
+            import pdb; pdb.set_trace()
             async for _, response in chatbot.ask_stream(prompt=user_message, conversation_style=bot_mode, raw=True,
                                                         webpage_context=context, search_result=True, locale=locale):
                 yield response
@@ -103,7 +103,7 @@ async def websocket_handler(request):
                 KievRPSSecAuth = request.get('KievRPSSecAuth')
                 _RwBf = request.get('_RwBf')
                 MUID = request.get('MUID')
-                import pdb; pdb.set_trace()
+                
                 if (request.get('imageInput') is not None) and (len(request.get('imageInput')) > 0):
                     imageInput = request.get('imageInput').split(",")[1]
                 else:
