@@ -146,7 +146,6 @@ if __name__ == '__main__':
                         default=urllib.request.getproxies().get('https'))
     args = parser.parse_args()
     print(f"Proxy used: {args.proxy}")
-
     host, port = args.host.split(":")
     port = int(port)
 
@@ -159,7 +158,7 @@ if __name__ == '__main__':
         print("cookies.json not found")
 
     claude_chatbot = claude.Chatbot(proxy=args.proxy)
-
+    
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(main(host, port))
