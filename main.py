@@ -19,7 +19,7 @@ async def sydney_process_message(user_message, bot_mode, context, _U, KievRPSSec
     # Set the maximum number of retries
     max_retries = 5
     for i in range(max_retries + 1):
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         try:
             cookies = loaded_cookies
             if _U:

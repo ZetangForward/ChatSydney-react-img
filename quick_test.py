@@ -8,7 +8,7 @@ import traceback
 
 context = ""
 
-user_message = "请问这个图片上面是什么？"
+user_message = "请问这个图片上面是什么？请仅仅描述图像内容，不要添加多余的话语。"
 bot_mode = "precise"  # creative
 
 with open("cookies.json", 'r') as f:
@@ -28,7 +28,7 @@ def image_to_base64(image_path):
     return base64.b64encode(img_data).decode('utf-8')  
   
 # 示例  
-image_path = "/workspace/zecheng/ChatSydney-react-img/public/svgviewer-png-output.png"  
+image_path = "/workspace/zecheng/ChatSydney-react-img/public/image.png"  
 imageInput = image_to_base64(image_path)  
 
 locale = 'zh-CN'
@@ -38,14 +38,21 @@ locale = 'zh-CN'
 #     print(response)
 
 async def sydney_process_message():    
+    chatbot = None
     max_retries = 5  
     for i in range(max_retries + 1):  
-        print(">>>>>>>>>>>>>>>")
-        print(i)
+        print(f">>>>>>>>>>>>>>> {i}-th turn of chat ... ")
         try:  
             chatbot = await Chatbot.create(cookies=cookies, proxy=None, imageInput=imageInput)    
               
-            async for _, response in chatbot.ask_stream(prompt=user_message, conversation_style=bot_mode, raw=True, webpage_context=context, search_result=True, locale=locale):    
+            async for _, response in chatbot.ask_stream(
+                prompt=user_message, 
+                conversation_style=bot_mode, 
+                raw=True, 
+                webpage_context=context, 
+                search_result=True, 
+                locale=locale
+            ):    
                 yield response  
             break  
         except Exception as e:  
@@ -65,13 +72,16 @@ async def sydney_process_message():
         finally:  
             if chatbot:  
                 await chatbot.close()  
-message = None
+message = [None]
 async def run_main():  
     async for response in sydney_process_message():
         # await ws.send_json(response)
-        message = response
+        
+        message[0] = response
+        print(message)
         # import pdb; pdb.set_trace()
   
 asyncio.run(run_main())  
 
+import pdb; pdb.set_trace()
 print(message)
