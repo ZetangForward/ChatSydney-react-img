@@ -19,6 +19,7 @@ async def sydney_process_message(user_message, bot_mode, context, _U, KievRPSSec
     # Set the maximum number of retries
     max_retries = 5
     for i in range(max_retries + 1):
+        import pdb; pdb.set_trace()
         try:
             cookies = loaded_cookies
             if _U:
@@ -113,6 +114,7 @@ async def websocket_handler(request):
                 if bot_type == "Sydney":
                     async for response in sydney_process_message(user_message, bot_mode, context, _U, KievRPSSecAuth, _RwBf, MUID, locale=locale, imageInput=imageInput):
                         await ws.send_json(response)
+                        import pdb; pdb.set_trace()
                 elif bot_type == "Claude":
                     async for response in claude_process_message(context):
                         await ws.send_json(response)

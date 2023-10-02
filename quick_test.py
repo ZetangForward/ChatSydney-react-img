@@ -4,11 +4,12 @@ from PIL import Image
 from io import BytesIO  
 import json
 import asyncio  
+import traceback
 
 context = ""
 
 user_message = "请问这个图片上面是什么？"
-bot_mode = "creative"
+bot_mode = "precise"  # creative
 
 with open("cookies.json", 'r') as f:
     cookies = json.load(f)
@@ -36,13 +37,41 @@ locale = 'zh-CN'
 # for _, response in chatbot.ask_stream(prompt=user_message, conversation_style=bot_mode, raw=True, webpage_context=context, search_result=True, locale=locale):
 #     print(response)
 
+async def sydney_process_message():    
+    max_retries = 5  
+    for i in range(max_retries + 1):  
+        print(">>>>>>>>>>>>>>>")
+        print(i)
+        try:  
+            chatbot = await Chatbot.create(cookies=cookies, proxy=None, imageInput=imageInput)    
+              
+            async for _, response in chatbot.ask_stream(prompt=user_message, conversation_style=bot_mode, raw=True, webpage_context=context, search_result=True, locale=locale):    
+                yield response  
+            break  
+        except Exception as e:  
+            if (  
+                "Sorry, you need to login first to access this service." in str(e)  
+                or "ServiceClient failure for DeepLeo" in str(e)  
+                or "Cannot retrieve user status" in str(e)  
+                or "Authentication failed" in str(e)  
+                or "conversationSignature" in str(e)  
+            ) and i < max_retries:  
+                print("Retrying...", i + 1, "attempts.")  
+                await asyncio.sleep(2)  
+            else:  
+                if i == max_retries:  
+                    print("Failed after", max_retries, "attempts.")  
+                print({"type": "error", "error": traceback.format_exc()})  
+        finally:  
+            if chatbot:  
+                await chatbot.close()  
+message = None
+async def run_main():  
+    async for response in sydney_process_message():
+        # await ws.send_json(response)
+        message = response
+        # import pdb; pdb.set_trace()
+  
+asyncio.run(run_main())  
 
-  
-async def main():  
-    chatbot = await Chatbot.create(cookies=cookies, proxy=None, imageInput=imageInput)  
-      
-    async for _, response in chatbot.ask_stream(prompt=user_message, conversation_style=bot_mode, raw=True, webpage_context=context, search_result=True, locale=locale):  
-        print(response)  
-  
-# 运行异步函数  
-asyncio.run(main())  
+print(message)
