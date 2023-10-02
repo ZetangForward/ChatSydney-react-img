@@ -20,6 +20,7 @@ async def sydney_process_message(user_message, bot_mode, context, _U, KievRPSSec
     max_retries = 5
     for i in range(max_retries + 1):
         try:
+            import pdb; pdb.set_trace()
             cookies = loaded_cookies
             if _U:
                 cookies = list(filter(lambda d: d.get('name') != '_U', cookies)) + [{"name": "_U", "value": _U}]
@@ -102,6 +103,7 @@ async def websocket_handler(request):
                 KievRPSSecAuth = request.get('KievRPSSecAuth')
                 _RwBf = request.get('_RwBf')
                 MUID = request.get('MUID')
+                import pdb; pdb.set_trace()
                 if (request.get('imageInput') is not None) and (len(request.get('imageInput')) > 0):
                     imageInput = request.get('imageInput').split(",")[1]
                 else:
@@ -141,7 +143,7 @@ async def main(host, port):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--host", "-H", help="host:port for the server", default="localhost:65432")
+    parser.add_argument("--host", "-H", help="host:port for the server", default="0.0.0.0:65432")
     parser.add_argument("--proxy", "-p", help='proxy address like "http://localhost:7890"',
                         default=urllib.request.getproxies().get('https'))
     args = parser.parse_args()

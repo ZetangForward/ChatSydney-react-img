@@ -60,3 +60,9 @@ class Chatbot:
             else:
                 yield reply["text"]
                 break
+            
+# if __name__ == "__main__":
+#     image_path =  'public/upload_image.png'
+#     # method 2
+#     imageInput = open(image_path, 'rb').read()
+#     bot = await Chatbot.create(imageInput=image)
