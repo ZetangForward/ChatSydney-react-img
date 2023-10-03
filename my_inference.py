@@ -99,7 +99,7 @@ async def main():
             with open(results_path_full, 'a') as f:
                 json.dump(results_full, f, indent=4)
         await bot.close()
-        break
+        # break
 
 
 if __name__ == "__main__":
