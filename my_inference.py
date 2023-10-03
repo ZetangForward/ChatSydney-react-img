@@ -85,6 +85,8 @@ async def main():
             image = base64.b64encode(img_file.read())
         bot = await Chatbot.create(cookies=cookies, imageInput=image) # Passing cookies is "optional", as explained above
         bing_answer = await bot.ask(prompt=prompt, conversation_style=conversation_style, simplify_response=True)
+        import pdb; pdb.set_trace()
+        
         response = bing_answer['text']
         print(f"Image Path: {img_path} Response: {response}")
         results[i] = response        
