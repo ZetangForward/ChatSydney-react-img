@@ -4,6 +4,9 @@ import base64
 import pandas as pd
 import os
 import time
+import requests
+
+url = "https://www.bing.com/search?q=Bing+AI&showconv=1&FORM=hpcodx"
 
 async def main():
 
@@ -80,8 +83,17 @@ async def main():
             #         """
         # print(f"\nPrompt: {prompt}")
         # load sample image
-
+        # if i % 50 == 0:
+        #     response = requests.get(url)  
+        #     cookies = response.cookies.get_dict()  
+            
+        #     # 将cookies转换为JSON格式  
+        #     cookies_json = json.dumps(cookies)  ## 自动获取网页的cookies
+        ## 手动获取网页的cookies
         cookies = json.loads(open("/workspace/zecheng/ChatSydney-react-img/cookies.json", encoding="utf-8").read())
+
+        
+        # cookies = cookies_json
         with open(img_path, "rb") as img_file:
             image = base64.b64encode(img_file.read())
         decoded_image = base64.b64decode(image)  
@@ -89,7 +101,7 @@ async def main():
             output_file.write(decoded_image) 
         bot = await Chatbot.create(cookies=cookies, imageInput=image) # Passing cookies is "optional", as explained above
         bing_answer = await bot.ask(prompt=prompt, conversation_style=conversation_style, simplify_response=True)
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         
         response = bing_answer['text']
         print(f"Image Path: {img_path} Response: {response}")
