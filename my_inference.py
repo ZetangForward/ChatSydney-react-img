@@ -26,7 +26,7 @@ async def main():
     
     image_paths = f'/zecheng/svg/data_svg.jsonl'    
     results_path = f'/zecheng/svg/caption_gen_gptv.jsonl'   
-    results_path_full = f'/zecheng/svg/caption_gen_gptv.jsonl'   
+    results_path_full = f'/zecheng/svg/caption_gen_gptv_full.jsonl'   
     # results_path = f'/home/weihao/data/mmeval/results/mmeval_{version}_{model_name}.json'
     # if save_full_reponse:
     #     results_path_full = f'/home/weihao/data/mmeval/results/mmeval_{version}_{model_name}_full.json'
@@ -84,20 +84,24 @@ async def main():
         cookies = json.loads(open("/workspace/zecheng/ChatSydney-react-img/cookies.json", encoding="utf-8").read())
         with open(img_path, "rb") as img_file:
             image = base64.b64encode(img_file.read())
+        decoded_image = base64.b64decode(image)  
+        with open("/workspace/zecheng/ChatSydney-react-img/output.png", "wb") as output_file:  # for saint check
+            output_file.write(decoded_image) 
         bot = await Chatbot.create(cookies=cookies, imageInput=image) # Passing cookies is "optional", as explained above
         bing_answer = await bot.ask(prompt=prompt, conversation_style=conversation_style, simplify_response=True)
         import pdb; pdb.set_trace()
         
         response = bing_answer['text']
         print(f"Image Path: {img_path} Response: {response}")
-        results[i] = response        
+        tmp = {"image path": img_path, "response": response, "category": category, "id": img_id}
+  
         with open(results_path, 'a') as f:
-            json.dump(results, f, indent=4)
+            f.write(json.dumps(tmp) + "\n")
         if save_full_reponse:
             full_response = bing_answer
-            results_full[i] = full_response
+            tmp = {"image path": img_path, "full_response": full_response, "category": category, "id": img_id}
             with open(results_path_full, 'a') as f:
-                json.dump(results_full, f, indent=4)
+                f.write(json.dumps(tmp) + "\n")
         await bot.close()
         # break
 
