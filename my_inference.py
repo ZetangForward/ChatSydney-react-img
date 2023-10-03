@@ -7,7 +7,7 @@ import time
 
 async def main():
 
-    model_name = "bing_short_balanced"
+    model_name = "bing_short_precise"
     if "balanced" in model_name:
         conversation_style = ConversationStyle.balanced
     elif "precise" in model_name:
@@ -71,12 +71,13 @@ async def main():
         # prompt = data.loc[i, 'question']
         # prompt = prompt.strip()
         if 'short' in model_name:
-            prompt = f"""Please describe this image with a short and concise text response. 
-                        Hint: the category of this image is {category}. You should follow the rules below:
-                        1: If this image is empty or you cannot describe this image, return "NULL" directly.
-                        2: Do not add reference.
-                        3. Just return text.
-                    """
+            prompt = "Describe this image in less than 20 words: "
+            # prompt = f"""Please describe this image with a short and concise text response. 
+            #             Hint: the category of this image is {category}. You should follow the rules below:
+            #             1: If this image is empty or you cannot describe this image, return "NULL" directly.
+            #             2: Do not add reference.
+            #             3. Just return text.
+            #         """
         # print(f"\nPrompt: {prompt}")
         # load sample image
 
